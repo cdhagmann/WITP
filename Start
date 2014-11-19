@@ -1,0 +1,3 @@
+clear
+python Run2.py | tee streaming_output
+

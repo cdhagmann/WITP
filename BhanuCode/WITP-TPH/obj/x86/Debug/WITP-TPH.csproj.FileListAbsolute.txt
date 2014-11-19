@@ -1,0 +1,12 @@
+c:\users\saiparam\documents\visual studio 2010\Projects\WITP-TPH\WITP-TPH\bin\Debug\WITP-TPH.exe
+c:\users\saiparam\documents\visual studio 2010\Projects\WITP-TPH\WITP-TPH\bin\Debug\WITP-TPH.pdb
+c:\users\saiparam\documents\visual studio 2010\Projects\WITP-TPH\WITP-TPH\obj\x86\Debug\ResolveAssemblyReference.cache
+c:\users\saiparam\documents\visual studio 2010\Projects\WITP-TPH\WITP-TPH\obj\x86\Debug\WITP-TPH.exe
+c:\users\saiparam\documents\visual studio 2010\Projects\WITP-TPH\WITP-TPH\obj\x86\Debug\WITP-TPH.pdb
+C:\Users\Chris\Copy\Code_Env\WITP\WITP_Bhanu\TPH\WITP-TPH\WITP-TPH\obj\x86\Debug\WITP-TPH.exe
+C:\Users\Chris\Copy\Code_Env\WITP\WITP_Bhanu\TPH\WITP-TPH\WITP-TPH\obj\x86\Debug\WITP-TPH.pdb
+C:\Users\Chris\Copy\Code_Env\WITP\WITP_Bhanu\BhanuCode\WITP-TPH\obj\x86\Debug\WITP-TPH.exe
+C:\Users\Chris\Copy\Code_Env\WITP\WITP_Bhanu\BhanuCode\WITP-TPH\obj\x86\Debug\WITP-TPH.pdb
+C:\Users\Chris\Copy\Code_Env\WITP\WITP_Bhanu\BhanuCode\WITP-TPH\bin\Debug\WITP-TPH.exe
+C:\Users\Chris\Copy\Code_Env\WITP\WITP_Bhanu\BhanuCode\WITP-TPH\bin\Debug\WITP-TPH.pdb
+C:\Users\Chris\Copy\Code_Env\WITP\WITP_Bhanu\BhanuCode\WITP-TPH\obj\x86\Debug\WITP-TPH.csprojResolveAssemblyReference.cache
