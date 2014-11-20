@@ -48,7 +48,7 @@ def solve_tech_model(idx, solver='gurobi', time=None, gap=None, cutoff=None):
         #print '\tFinished {0:6}: {1}, {2}'.format(*FTI)
 
         #FTI = [tech, instance.lambda_put.value/8., instance.lambda_pick.value/8.]
-        #print '\tFinished {0:6}: {1:6} | {2:6}'.format(*FTI)       
+        #print '\tFinished {0:6}: {1:6} | {2:6}'.format(*FTI)
 
         with open('results_{}.txt'.format(idx), 'w') as f:
             f.write('Results from {}\n'.format(tech))
@@ -98,7 +98,7 @@ def Pyomo_code(**kwargs):
     def T_command(idx, **kwargs):
         opts = {}
         time_limit = int( min([max( [P_timeout / len(indices), 2 * 3600] ), 12 * 3600]) )
-        time_limit = 48 * 60 * 60 
+        time_limit = 48 * 60 * 60
         opts['S'] = kwargs.get('solver', 'gurobi')
         opts['T'] = kwargs.get('time', time_limit)
         opts['I'] = idx
@@ -124,82 +124,80 @@ def Pyomo_code(**kwargs):
         args = "{I}, solver='{S}', time={T}, gap={G}, cutoff={C}".format(**opts)
         return 'solve_tech_model({})'.format(args)
 
+    for i, idx in enumerate(indices):
+        if i > 0:
+            if sum(Times) + mean(Times) > P_timeout:
+                raise Exception
 
-    try:
-        for i, idx in enumerate(indices):
-            if i > 0:
-                if sum(Times) + mean(Times) > P_timeout:
-                    raise Exception
+        prog = (i + 1) / float(len(indices))
+        tech = 'Tech{}'.format(idx)
 
-            prog = (i + 1) / float(len(indices))
-            tech = 'Tech{}'.format(idx)
+        # print 'Starting Tech {}'.format(idx)
+        try:
+            t1 = time.time()
+            command = T_command(idx, **kwargs)
+            # print command
+            T = Timeit(command, setup=T_setup)
+            obj = read_P_sol('results_{}.yml'.format(idx))
+        except ValueError, e:
+            print 'ValueError: ' + str(e)
+        except Exception:
+            t2 = time.time()
+            T = t2 - t1
 
-            # print 'Starting Tech {}'.format(idx)
-            try:
-                t1 = time.time()
-                command = T_command(idx, **kwargs)
-                # print command
-                T = Timeit(command, setup=T_setup)
-                obj = read_P_sol('results_{}.yml'.format(idx))
-            except ValueError, e:
-                print 'ValueError: ' + str(e)
-            except Exception:
-                t2 = time.time()
-                T = t2 - t1
+        Times.append(T)
+        Techs.append(tech)
 
-            Times.append(T)
-            Techs.append(tech)
-
-            if type(obj) == str:
-                if obj == 'maxTimeLimit':
-                    line = bash_command('tail -1 temp.log')[0]
-                    obj = float(line.split()[2].strip(','))
-                    err = float(line.split()[-1].strip('%'))
-                    Obj.append(obj)
-                    info = [tech, '{} [{}%]'.format(curr(obj), err), curr(min(Obj)), perc(prog), ptime(T)]
-                else:    
-                    Obj.append(float('inf'))
-                
-                    if min(Obj) == float('inf'):
-                        info = [tech, obj, obj, perc(prog), ptime(T)]
-                    else:
-                        info = [tech, obj, curr(min(Obj)), perc(prog), ptime(T)]
-            else:
+        if type(obj) == str:
+            if obj == 'maxTimeLimit':
+                line = bash_command('tail -1 temp.log')[0]
+                obj = float(line.split()[2].strip(','))
+                err = float(line.split()[-1].strip('%'))
                 Obj.append(obj)
-                info = [tech, curr(obj), curr(min(Obj)), perc(prog), ptime(T)]
+                info = [tech, '{} [{}%]'.format(curr(obj), err), curr(min(Obj)), perc(prog), ptime(T)]
+            else:
+                Obj.append(float('inf'))
 
-            print "\tFinished {0:6}: {1} ({2}) [{3} Completed] ({4})".format(*info)
-
-            with open('results_summary.txt', 'a') as f:
-                f.write("Finished {0:6}: {1} ({2}) [{3} Completed] ({4})\n".format(*info))
-    finally:
-        print ''
-        OBJ = min(Obj)
-        if OBJ == float('inf'):
-            info = ['None', obj, ptime(sum(Times))]
+                if min(Obj) == float('inf'):
+                    info = [tech, obj, obj, perc(prog), ptime(T)]
+                else:
+                    info = [tech, obj, curr(min(Obj)), perc(prog), ptime(T)]
         else:
-            idx = Obj.index(OBJ)
-            TECH = Techs[idx]
-            info = [TECH, curr(OBJ), ptime(sum(Times))]
+            Obj.append(obj)
+            info = [tech, curr(obj), curr(min(Obj)), perc(prog), ptime(T)]
 
-            cp('results_{}.yml'.format(num_strip(TECH)), 'results_best.yml')
-            cp('summary_{}.txt'.format(num_strip(TECH)), 'summary_best.txt')
+        print "\tFinished {0:6}: {1} ({2}) [{3} Completed] ({4})".format(*info)
 
-        print "\tOptimal Solution {}: {} ({})".format(*info)
         with open('results_summary.txt', 'a') as f:
-            f.write("\nOptimal Solution:\n\t{}: {} ({})".format(*info))
+            f.write("Finished {0:6}: {1} ({2}) [{3} Completed] ({4})\n".format(*info))
 
-        command = 'rm -f ReferenceModel*'
-        _ = bash_command(command)
+    print ''
+    OBJ = min(Obj)
+    if OBJ == float('inf'):
+        info = ['None', obj, ptime(sum(Times))]
+    else:
+        idx = Obj.index(OBJ)
+        TECH = Techs[idx]
+        info = [TECH, curr(OBJ), ptime(sum(Times))]
 
-        if output and not cutoff:
-            L = zip(Techs, Obj)
-            L.sort(key=lambda (t, o): o)
-            print '\nTop 5 Techs:'
-            for t, o in L[:5]:
-                print '\t{0:6}: {1}'.format(t, curr(o))
+        cp('results_{}.yml'.format(num_strip(TECH)), 'results_best.yml')
+        cp('summary_{}.txt'.format(num_strip(TECH)), 'summary_best.txt')
 
-        return OBJ, sum(Times)
+    print "\tOptimal Solution {}: {} ({})".format(*info)
+    with open('results_summary.txt', 'a') as f:
+        f.write("\nOptimal Solution:\n\t{}: {} ({})".format(*info))
+
+    command = 'rm -f ReferenceModel*'
+    _ = bash_command(command)
+
+    if output and not cutoff:
+        L = zip(Techs, Obj)
+        L.sort(key=lambda (t, o): o)
+        print '\nTop 5 Techs:'
+        for t, o in L[:5]:
+            print '\t{0:6}: {1}'.format(t, curr(o))
+
+    return OBJ, sum(Times)
 
 
 P_timeout = 7 * 24 * 60 * 60
@@ -414,5 +412,3 @@ if '__main__' == __name__:
     # t, i, o = solve_tech_model(11)
 
     # SubCost(t,i,o)
-    
-
