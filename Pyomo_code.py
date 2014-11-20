@@ -132,13 +132,9 @@ def Pyomo_code(**kwargs):
         prog = (i + 1) / float(len(indices))
         tech = 'Tech{}'.format(idx)
 
-        # print 'Starting Tech {}'.format(idx)
-
-
         command = T_command(idx, **kwargs)
         T = Timeit(command, setup=T_setup)
         obj = read_P_sol('results_{}.yml'.format(idx))
-
 
         Times.append(T)
         Techs.append(tech)
