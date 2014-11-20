@@ -1,0 +1,31 @@
+Created WITPdataSet_v2q2s2p2t5.txt
+Compiled WITP-TPH.exe
+Pickled Data
+MTest_K0A1
+Instance 1 of 6:
+    RUN TIME [Bhanu]: 2.36 seconds
+    MIN COST [Bhanu]: $23,240.86
+
+Instance 2 of 6:
+    RUN TIME [Bhanu]: 2.18 seconds
+    MIN COST [Bhanu]: $25,409.90
+
+Instance 3 of 6:
+    RUN TIME [Bhanu]: 3.17 seconds
+    MIN COST [Bhanu]: $23,053.50
+
+Instance 4 of 6:
+    RUN TIME [Bhanu]: 1.59 seconds
+    MIN COST [Bhanu]: $25,420.46
+
+Instance 5 of 6:
+    RUN TIME [Bhanu]: 2.34 seconds
+    MIN COST [Bhanu]: $23,982.20
+
+Instance 6 of 6:
+    RUN TIME [Bhanu]: 1.85 seconds
+    MIN COST [Bhanu]: $25,460.85
+
+Optimality Gap: 2.00%
+
+Hybrid Method:

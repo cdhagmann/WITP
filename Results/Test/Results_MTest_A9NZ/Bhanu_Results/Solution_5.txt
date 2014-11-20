@@ -1,0 +1,123 @@
+Printing New Fashion Solution:
+
+Inbound Fashion Solution (V F T):
+1	1	1	11055
+1	2	3	12965
+
+
+Outbound Fashion Solution(S F T):
+1	1	3	3285
+1	2	5	8160
+2	1	4	7770
+2	2	4	4805
+
+
+Warehouse Fashion Inventory (W F T):
+1	11055		11055		7770		0		0	
+2	0		0		12965		8160		0	
+
+Store Fashion Inventory (S F T):
+Store1
+1	0		3285		3285		3285	
+2	0		0		0		8160	
+Store2
+1	0		0		7770		7770	
+2	0		0		4805		4805	
+
+
+Fashion Shipments from Vendor to Warehouse (V T):
+0.5159	0	0.70011	0	
+
+Printing New Basic Solution:
+
+Inbound Solution (V P T):
+1	1	2	8753
+1	2	2	9994
+
+
+Outbound Solution(S P T):
+1	1	3	4407
+1	2	3	4537
+2	1	2	4346
+2	2	2	5457
+
+
+Warehouse Inventory (W P T):
+1	0		0		4407		0		0		0	
+2	0		0		4537		0		0		0	
+
+Store Inventory (S P T):
+Store1
+1	1491		1189		0		3497		2573		1491	
+2	1163		179		0		3230		1995		1163	
+Store2
+1	842		0		2935		2009		1258		842	
+2	773		0		4683		3502		2523		773	
+
+
+Shipments from Vendor to Warehouse (V T):
+0	0.5291846	0	0	0	
+
+Shipments from Warehouse to Stores (S T):
+1	3	0.4111593
+1	5	0.44064
+2	2	0.2713253
+2	4	0.62207
+
+
+Required Putaway workers (Sol T):
+2	2	2	0	0	
+
+No of required pickers (T):
+0	4	4	4	3	
+
+No of part-time putaway workers (T):
+0	0	0	0	0	
+
+No of part-time pickers (T):
+0	1	1	1	0	
+
+Best Putaway Technology: 1200
+Best Picking Technology: 400
+
+Required Fashion Putaway Hours:
+9.2125	0	10.80417	0	0	
+
+Required Basic Putaway Hours:
+0	15.6225	0	0	0	
+
+Required Total Putaway Hours:
+9.2125	15.6225	10.80417	0	0	
+
+No of required fashion pick hours:
+0	0	8.2125	31.4375	20.4	
+
+No of required basic pick hours:
+0	24.5075	22.36	0	0	
+
+No of required total pick hours:
+0	24.5075	30.5725	31.4375	20.4	
+
+List of all the costs: 
+MHECost		270
+PutawayTechCost		1060
+PickingTechCost		2055
+WhBasicInvCost		89.44
+BasicInbCost		2301.369
+WhFashionInvCost		510.05
+FashionInbCost		2354.407
+PutawayCost		3200
+StoreBasicInvCost		1692.1
+StoreFashionInvCost		2158.25
+OutboundCost		4153.162
+PickingCost		5520
+Total		25363.78
+
+List of Top5 Technologies: 
+Tech1		2	4	$ 25363.78
+Tech2		1	4	$ 27867.62
+Tech3		1	5	$ 30602.56
+Tech4		1	1	$ 50002.56
+Tech5		None	None	$ -
+The start time is 11/19/2014 10:08:07 PM
+The End time is 11/19/2014 10:08:09 PM

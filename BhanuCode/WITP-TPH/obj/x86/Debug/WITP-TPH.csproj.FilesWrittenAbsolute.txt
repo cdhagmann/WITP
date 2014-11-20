@@ -31,3 +31,8 @@
 /home/cdhagmann/Copy/Code_Env/WITP/MASTER_HYBRID/BhanuCode/WITP-TPH/obj/x86/Debug/WITP-TPH.exe
 /home/cdhagmann/Copy/Code_Env/WITP/MASTER_HYBRID/BhanuCode/WITP-TPH/obj/x86/Debug/WITP-TPH.exe.mdb
 /home/cdhagmann/Copy/Code_Env/WITP/MASTER_HYBRID/BhanuCode/WITP-TPH/obj/x86/Debug/.NETFramework,Version=v4.0,Profile=Client.AssemblyAttribute.cs
+/home/cdhagmann/Documents/GitHub/WITP/BhanuCode/WITP-TPH/obj/x86/Debug/.NETFramework,Version=v4.0,Profile=Client.AssemblyAttribute.cs
+/home/cdhagmann/Documents/GitHub/WITP/BhanuCode/WITP-TPH/bin/Debug/WITP-TPH.exe.mdb
+/home/cdhagmann/Documents/GitHub/WITP/BhanuCode/WITP-TPH/bin/Debug/WITP-TPH.exe
+/home/cdhagmann/Documents/GitHub/WITP/BhanuCode/WITP-TPH/obj/x86/Debug/WITP-TPH.exe
+/home/cdhagmann/Documents/GitHub/WITP/BhanuCode/WITP-TPH/obj/x86/Debug/WITP-TPH.exe.mdb

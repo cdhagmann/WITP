@@ -1,0 +1,131 @@
+Printing New Fashion Solution:
+
+Inbound Fashion Solution (V F T):
+1	1	2	13105
+1	2	3	7520
+
+
+Outbound Fashion Solution(S F T):
+1	1	3	7235
+1	2	5	4415
+2	1	4	5870
+2	2	5	3105
+
+
+Warehouse Fashion Inventory (W F T):
+1	0		13105		5870		0		0	
+2	0		0		7520		7520		0	
+
+Store Fashion Inventory (S F T):
+Store1
+1	0		7235		7235		7235	
+2	0		0		0		4415	
+Store2
+1	0		0		5870		5870	
+2	0		0		0		3105	
+
+
+Fashion Shipments from Vendor to Warehouse (V T):
+0	0.8474567	0.4762667	0	
+
+Printing New Basic Solution:
+
+Inbound Solution (V P T):
+1	1	1	3119
+1	1	4	7285
+1	2	1	3846
+1	2	4	5628
+
+
+Outbound Solution(S P T):
+1	1	2	2786
+1	1	5	3086
+1	2	2	2716
+1	2	5	1168
+2	1	1	2128
+2	1	4	2404
+2	2	1	2276
+2	2	4	3314
+
+
+Warehouse Inventory (W P T):
+1	1795		2786		0		0		4881		1795	
+2	1146		2716		0		0		2314		1146	
+
+Store Inventory (S P T):
+Store1
+1	1974		1316		2905		1674		0		1974	
+2	265		17		2681		1813		0		265	
+Store2
+1	1404		2671		1640		0		1892		1404	
+2	641		1618		880		0		2037		641	
+
+
+Shipments from Vendor to Warehouse (V T):
+0.230494	0	0	0.386266	0	
+
+Shipments from Warehouse to Stores (S T):
+1	2	0.1732733
+1	3	0.4678634
+1	5	0.388114
+2	1	0.1414827
+2	4	0.5731
+2	5	0.19665
+
+
+Required Putaway workers (Sol T):
+2	3	2	3	0	
+
+No of required pickers (T):
+2	2	2	3	3	
+
+No of part-time putaway workers (T):
+0	1	0	1	0	
+
+No of part-time pickers (T):
+0	0	0	1	1	
+
+Best Putaway Technology: 600
+Best Picking Technology: 500
+
+Required Fashion Putaway Hours:
+0	21.84167	12.53333	0	0	
+
+Required Basic Putaway Hours:
+11.60833	0	0	21.52167	0	
+
+Required Total Putaway Hours:
+11.60833	21.84167	12.53333	21.52167	0	
+
+No of required fashion pick hours:
+0	0	14.47	11.74	15.04	
+
+No of required basic pick hours:
+8.808	11.004	0	11.436	8.508	
+
+No of required total pick hours:
+8.808	11.004	14.47	23.176	23.548	
+
+List of all the costs: 
+MHECost		108
+PutawayTechCost		0
+PickingTechCost		3195
+WhBasicInvCost		156.38
+BasicInbCost		1723.599
+WhFashionInvCost		340.15
+FashionInbCost		4447.204
+PutawayCost		3680
+StoreBasicInvCost		1271.4
+StoreFashionInvCost		2048.25
+OutboundCost		5591.918
+PickingCost		3680
+Total		26241.9
+
+List of Top5 Technologies: 
+Tech1		1	5	$ 26241.9
+Tech2		1	3	$ 29756.88
+Tech3		1	1	$ 40617.68
+Tech4		None	None	$ -
+Tech5		None	None	$ -
+The start time is 11/19/2014 10:02:07 PM
+The End time is 11/19/2014 10:02:10 PM
