@@ -133,17 +133,12 @@ def Pyomo_code(**kwargs):
         tech = 'Tech{}'.format(idx)
 
         # print 'Starting Tech {}'.format(idx)
-        try:
-            t1 = time.time()
-            command = T_command(idx, **kwargs)
-            # print command
-            T = Timeit(command, setup=T_setup)
-            obj = read_P_sol('results_{}.yml'.format(idx))
-        except ValueError, e:
-            print 'ValueError: ' + str(e)
-        except Exception:
-            t2 = time.time()
-            T = t2 - t1
+
+
+        command = T_command(idx, **kwargs)
+        T = Timeit(command, setup=T_setup)
+        obj = read_P_sol('results_{}.yml'.format(idx))
+
 
         Times.append(T)
         Techs.append(tech)
