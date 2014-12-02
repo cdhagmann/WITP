@@ -116,7 +116,7 @@ def big_m_model():
     model.theta_put = Var(model.PUTAWAY, within=Binary)
     model.theta_pick = Var(model.PICKING, within=Binary)
 
-    model.MHE_cost =  = Var(model.PUTAWAY, within=NonNegativeIntegers)
+    model.MHE_cost = Var(model.PUTAWAY, within=NonNegativeIntegers)
 
 
     model.beta_put = Var(model.TIMES,
@@ -426,3 +426,6 @@ def big_m_model():
     model.ConstraintTwentyOne = Constraint(model.STORES, model.TIMES)
 
     return model
+
+if __name__ == '__main__':
+    model = big_m_model()
