@@ -399,7 +399,7 @@ def SubCost(tech, inst, obj):
 
 
 if '__main__' == __name__:
-    T1 = Pyomo_code(cutoff=True, gap=.0175)
+    T1 = Pyomo_code(gap=.0175)
     # t, i, o = solve_tech_model(11)
 
     # SubCost(t,i,o)

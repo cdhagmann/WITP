@@ -123,6 +123,6 @@ if '__main__' == __name__:
     overview = path(foldername,'Overview.txt')
     cpath = path(foldername,'Case_1')
     print ID
-    (BS, BT, HS), HT = Hybrid_code(cpath, N=N)
+    (BS, BT, HS), HT = Hybrid_code(cpath, N=6)
     print
     PS, PT = Pyomo_wrapper(cpath)        

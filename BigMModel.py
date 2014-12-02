@@ -2,10 +2,12 @@
 #                              IMPORT MODULES
 #-----------------------------------------------------------------------------
 
-from coopr.pyomo import ConcreteModel, Set, Param, PositiveReals
-from coopr.pyomo import NonNegativeIntegers, Binary, Var, summation
+from coopr.pyomo import *
 import pickle
-import instance
+from coopr import neos
+from coopr.opt import SolverFactory
+import coopr.environ
+from Function_Module import *
 #-----------------------------------------------------------------------------
 #                            MOTIVATION FROM WIFE
 #-----------------------------------------------------------------------------
@@ -19,9 +21,12 @@ import instance
 class Struct():
     pass
 
+def num_strip(s):
+    return int( ''.join( c for c in str(s) if c.isdigit() ) )
+
 def big_m_model():
 
-    with open('Pickled_Data', 'rb') as f:
+    with open('PyomoCode/Pickled_Data', 'rb') as f:
         rd = pickle.load(f)
 
     model = ConcreteModel()
@@ -106,6 +111,9 @@ def big_m_model():
     model.Lambda_pick = Param(model.PICKING, initialize=rd.lambda_pick)
     model.Cth_put = Param(model.PUTAWAY, initialize=rd.C_put)
     model.Cth_pick = Param(model.PICKING, initialize=rd.C_pick)
+    
+    model.BigM = Param(initialize=500)
+    model.M_MHE = Param(initialize=50000)
 
     #-----------------------------------------------------------------------------
     #                           DECLARE MODEL VARIABLES
@@ -120,7 +128,7 @@ def big_m_model():
     model.theta_put = Var(model.PUTAWAY, within=Binary)
     model.theta_pick = Var(model.PICKING, within=Binary)
 
-    model.MHE_cost = Var(model.PUTAWAY, within=NonNegativeIntegers)
+    model.MHE_Cost = Var(model.PUTAWAY, within=NonNegativeIntegers)
 
 
     model.beta_put = Var(model.TIMES,
@@ -168,11 +176,11 @@ def big_m_model():
 
 
     def objective_rule(model):
-        Workers_Cost = model.Ca * (model.alpha_put + model.alpha_pick) + \
-                       model.Cb * sum((model.beta_put[t] + model.beta_pick[t])
+        Workers_Cost = model.C_alpha * (model.alpha_put + model.alpha_pick) + \
+                       model.C_beta * sum((model.beta_put[t] + model.beta_pick[t])
                                        for t in model.TIMES)
 
-        MHE_Cost = summation(model.MHE_cost)
+        MHE_Cost = summation(model.MHE_Cost)
 
         Tech_Cost = summation(model.Cth_put, model.theta_put) + \
                     summation(model.Cth_pick, model.theta_pick)
@@ -211,22 +219,29 @@ def big_m_model():
 
     model.objective = Objective(sense=minimize)
 
-
+    def constraint1_rule(model):
+        return (summation(model.theta_put), 1)
+    
+    model.constraint1 = Constraint()
+    def constraint2_rule(model):
+        return (summation(model.theta_pick), 1)
+    
+    model.constraint2 = Constraint()
     def BigM_MHE_LOWER_rule(model, i):
-        expr = model.MHE_COST[i]
+        expr = model.MHE_Cost[i]
         expr -= sum(model.MHE[i] * (model.alpha_put + model.beta_put[t])
                     for t in model.TIMES)
-        return (-model.M_MHE * (1 - model.theta_put[i]), expr, None)
+        return -model.M_MHE * (1 - model.theta_put[i]) <= expr
 
-    model.BigM_MHE_LOWER = Constraint(model.PUTAWAY, model.TIMES)
+    model.BigM_MHE_LOWER = Constraint(model.PUTAWAY)
 
     def BigM_MHE_UPPER_rule(model, i):
-        expr = model.MHE_COST[i]
+        expr = model.MHE_Cost[i]
         expr -= sum(model.MHE[i] * (model.alpha_put + model.beta_put[t])
                     for t in model.TIMES)
-        return (None, expr, model.M_MHE * (1 - model.theta_put[i]))
+        return expr <= model.M_MHE * (1 - model.theta_put[i])
 
-    model.BigM_MHE_UPPER = Constraint(model.PUTAWAY, model.TIMES)
+    model.BigM_MHE_UPPER = Constraint(model.PUTAWAY)
 
     def ConstraintFour_rule(model, i, t):
         Four_expr1 = sum(model.x_vpt[v,p,t] for v, p in model.OMEGA_P)
@@ -430,6 +445,218 @@ def big_m_model():
     model.ConstraintTwentyOne = Constraint(model.STORES, model.TIMES)
 
     return model
+    
+def solve_big_m_model(model=None):
+    if model is None:
+        model = big_m_model()
+
+
+    instance = model.create()
+    opt = SolverFactory('gurobi')
+    results = opt.solve(model)
+    
+    instance.load(results)
+    return instance
+
+
+def big_M_output(inst):
+    obj = instance.objective()
+    for t in inst.theta_put: 
+        if inst.theta_put[t].value == 1:
+            i = t
+    
+
+    for t in inst.theta_pick: 
+        if inst.theta_pick[t].value == 1:
+            j = t
+            
+    idx = 6 * (num_strip(t)-1) + (num_strip(t)-1)
+    tech = 'Tech' + str(idx)
+    
+    PickingCost = inst.C_alpha.value * inst.alpha_pick.value
+    PickingCost += inst.C_beta.value * sum(inst.beta_pick[t].value for t in inst.TIMES)
+
+    PutawayCost = inst.C_alpha.value * inst.alpha_put.value
+    PutawayCost += inst.C_beta.value * sum(inst.beta_put[t].value for t in inst.TIMES)
+
+    MHECost = sum(inst.MHE_Cost[i] for i in inst.PUTAWAY)
+
+    PutawayTechCost = inst.Cth_put[i]
+
+    PickingTechCost = inst.Cth_pick[j]
+
+    WhBasicInvCost = sum(inst.C_hp[p] * inst.y_pt[p, t].value
+                         for p in inst.PRODUCTS for t in inst.TIMES)
+
+    WhFashionInvCost = sum(inst.C_hq[q] * inst.X_osq[s, q] * inst.tau_sq[s, q].value
+                           for s in inst.STORES for q in inst.FASHION)
+
+    StoreBasicInvCost = sum(inst.C_hsp[s, p] * inst.y_spt[s, p, t].value
+                            for s in inst.STORES for p in inst.PRODUCTS for t in inst.TIMES)
+
+    StoreFashionInvCost = sum(inst.C_hsq[s, q] * inst.y_sqt[s, q, t].value
+                              for s in inst.STORES for q in inst.FASHION for t in inst.TIMES)
+
+    BasicInbCost = sum(inst.C_fv[v] * inst.n_vt[v, t].value
+                       for v in inst.VENDORS_P for t in inst.TIMES)
+    BasicInbCost += sum(inst.C_vv[v] * inst.W_p[p] * inst.x_vpt[v, p, t].value
+                        for v, p in inst.OMEGA_P for t in inst.TIMES)
+
+    FashionInbCost = sum(inst.C_fv[v] * inst.n_vt[v, t].value
+                         for v in inst.VENDORS_Q for t in inst.TIMES)
+    FashionInbCost += sum(inst.C_vv[v] * inst.W_q[q] *
+                          inst.X_ivq[v, q] * inst.rho_vqt[v, q, t].value
+                          for v, q in inst.OMEGA_Q for t in inst.TIMES)
+
+    OutboundCost = sum(inst.C_fs[s] * inst.n_st[s, t].value
+                       for s in inst.STORES for t in inst.TIMES)
+    OutboundCost += sum(inst.C_vs[s] * inst.W_p[p] * inst.x_spt[s, p, t].value
+                        for s in inst.STORES for p in inst.PRODUCTS for t in inst.TIMES)
+    OutboundCost += sum(inst.C_vs[s] * inst.W_q[q] *
+                        inst.X_osq[s, q] * inst.rho_sqt[s, q, t].value
+                        for s in inst.STORES for q in inst.FASHION for t in inst.TIMES)
+
+    with open('summary_{}.txt'.format(idx), 'w') as f:
+        from check_sol import T
+
+        f.write('Results from {}\n'.format(tech))
+        f.write('Putaway Technology: {}\n'.format(T[idx][0]))
+        f.write('Picking Technology: {}\n\n'.format(T[idx][1]))
+        f.write('Full-Time Putaway workers: {}\n'.format(inst.alpha_put.value))
+        f.write('Full-Time Picking workers: {}\n'.format(inst.alpha_pick.value))
+        f.write('\nCost Breakdown:\n')
+        f.write('\tMHECost              {}\n'.format(curr(MHECost)))
+        f.write('\tPutawayTechCost      {}\n'.format(curr(PutawayTechCost)))
+        f.write('\tPickingTechCost      {}\n'.format(curr(PickingTechCost)))
+        f.write('\tWhBasicInvCost       {}\n'.format(curr(WhBasicInvCost)))
+        f.write('\tBasicInbCost         {}\n'.format(curr(BasicInbCost)))
+        f.write('\tWhFashionInvCost     {}\n'.format(curr(WhFashionInvCost)))
+        f.write('\tFashionInbCost       {}\n'.format(curr(FashionInbCost)))
+        f.write('\tPutawayCost          {}\n'.format(curr(PutawayCost)))
+        f.write('\tStoreBasicInvCost    {}\n'.format(curr(StoreBasicInvCost)))
+        f.write('\tStoreFashionInvCost  {}\n'.format(curr(StoreFashionInvCost)))
+        f.write('\tOutboundCost         {}\n'.format(curr(OutboundCost)))
+        f.write('\tPickingCost          {}\n'.format(curr(PickingCost)))
+        f.write('\tTotal                {}\n'.format(curr(obj)))
+        with Redirect(f, f):
+            print '\n\nPrinting New Fashion Solution:\n'
+            ri = lambda num: int(round(num, 0))
+            print 'Inbound Fashion Solution'
+            for v, q in sorted(inst.OMEGA_Q):
+                print num_strip(v), '\t',
+                print num_strip(q), '\t',
+                for t in sorted(inst.TIMES):
+                    if inst.rho_vqt[v, q, t] == 1:
+                        print t, '\t', ri(inst.X_ivq[v, q])
+
+            print '\nOutbound Solution'
+            for s in sorted(inst.STORES):
+                for q in sorted(inst.FASHION):
+                    print num_strip(s), '\t',
+                    print num_strip(q), '\t',
+                    for t in sorted(inst.TIMES):
+                        if inst.rho_sqt[s, q, t] == 1:
+                            print t, '\t', ri(inst.X_osq[s, q])
+
+            print '\nStore Inventory'
+            for s in sorted(inst.STORES):
+                print 'Store{}'.format(num_strip(s))
+                for q in sorted(inst.FASHION):
+                    print num_strip(v),
+                    for t in sorted(inst.TIMES):
+                        num = ri(inst.y_sqt[s, q, t].value)
+                        print str(num) + (' ' * (10 - len(str(num)))),
+                    print
+
+            print '\nShipments from (Basic) Vendor to Warehouse'
+            for v in sorted(inst.VENDORS_Q):
+                for t in sorted(inst.TIMES):
+                    num = ri(inst.n_vt[v, t].value)
+                    print str(num) + (' ' * (10 - len(str(num)))),
+                print
+
+            print '\nPrinting New Basic Solution:\n'
+
+            print '\nInbound Solution'
+            for v, p in sorted(inst.OMEGA_P):
+                for t in sorted(inst.TIMES):
+                    print num_strip(v), '\t',
+                    print num_strip(p), '\t',
+                    print t, '\t',
+                    print ri(inst.x_vpt[v, p, t].value)
+
+            print '\nOutbound Solution'
+            for s in sorted(inst.STORES):
+                print 'Store{}'.format(num_strip(s))
+                for p in sorted(inst.PRODUCTS):
+                    print num_strip(p),
+                    for t in sorted(inst.TIMES):
+                        num = ri(inst.x_spt[s, p, t].value)
+                        print str(num) + (' ' * (10 - len(str(num)))),
+                    print
+
+            print '\nWarehouse Inventory'
+            for p in sorted(inst.PRODUCTS):
+                print num_strip(p),
+                for t in sorted(inst.TIMES):
+                    num = ri(inst.y_pt[p, t].value)
+                    print str(num) + (' ' * (10 - len(str(num)))),
+                print
+
+            print '\nStore Inventory'
+            for s in sorted(inst.STORES):
+                print 'Store{}'.format(num_strip(s))
+                for p in sorted(inst.PRODUCTS):
+                    print num_strip(p),
+                    for t in sorted(inst.TIMES):
+                        num = ri(inst.y_spt[s, p, t].value)
+                        print str(num) + (' ' * (10 - len(str(num)))),
+                    print
+
+            print '\nShipments from (Basic) Vendor to Warehouse'
+            for v in sorted(inst.VENDORS_P):
+                for t in sorted(inst.TIMES):
+                    num = ri(inst.n_vt[v, t].value)
+                    print str(num) + (' ' * (10 - len(str(num)))),
+                print
+
+            print '\nShipments from (Fashion) Vendor to Warehouse'
+            for v in sorted(inst.VENDORS_Q):
+                for t in sorted(inst.TIMES):
+                    num = ri(inst.n_vt[v, t].value)
+                    print str(num) + (' ' * (10 - len(str(num)))),
+                print
+
+            print '\nShipments from Warehouse to Stores'
+            for s in sorted(inst.STORES):
+                print num_strip(s),
+                for t in sorted(inst.TIMES):
+                    num = ri(inst.n_st[s, t].value)
+                    print str(num) + (' ' * (10 - len(str(num)))),
+                print
+
+            print '\nNo of part-time putaway workers:'
+            for t in sorted(inst.TIMES):
+                num = ri(inst.beta_put[t].value)
+                print str(num) + (' ' * (10 - len(str(num)))),
+            print
+
+            print '\nNo of part-time picking workers:'
+            for t in sorted(inst.TIMES):
+                num = ri(inst.beta_pick[t].value)
+                print str(num) + (' ' * (10 - len(str(num)))),
+            print
+
 
 if __name__ == '__main__':
-    model = big_m_model()
+    instance = solve_big_m_model()
+    for t in instance.theta_put: 
+        if instance.theta_put[t].value == 1:
+            print t,
+    
+    for t in instance.theta_pick: 
+        if instance.theta_pick[t].value == 1:
+            print t,
+
+    print instance.objective()
+    big_M_output(instance)
