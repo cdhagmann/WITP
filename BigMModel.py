@@ -111,7 +111,7 @@ def big_m_model():
     model.Lambda_pick = Param(model.PICKING, initialize=rd.lambda_pick)
     model.Cth_put = Param(model.PUTAWAY, initialize=rd.C_put)
     model.Cth_pick = Param(model.PICKING, initialize=rd.C_pick)
-    
+
     model.BigM = Param(initialize=500)
     model.M_MHE = Param(initialize=50000)
 
@@ -221,11 +221,11 @@ def big_m_model():
 
     def constraint1_rule(model):
         return (summation(model.theta_put), 1)
-    
+
     model.constraint1 = Constraint()
     def constraint2_rule(model):
         return (summation(model.theta_pick), 1)
-    
+
     model.constraint2 = Constraint()
     def BigM_MHE_LOWER_rule(model, i):
         expr = model.MHE_Cost[i]
@@ -445,7 +445,7 @@ def big_m_model():
     model.ConstraintTwentyOne = Constraint(model.STORES, model.TIMES)
 
     return model
-    
+
 def solve_big_m_model(model=None):
     if model is None:
         model = big_m_model()
@@ -454,25 +454,27 @@ def solve_big_m_model(model=None):
     instance = model.create()
     opt = SolverFactory('gurobi')
     results = opt.solve(model)
-    
+
     instance.load(results)
     return instance
 
 
 def big_M_output(inst):
     obj = instance.objective()
-    for t in inst.theta_put: 
+    for t in inst.theta_put:
         if inst.theta_put[t].value == 1:
             i = t
-    
 
-    for t in inst.theta_pick: 
+
+    for t in inst.theta_pick:
         if inst.theta_pick[t].value == 1:
             j = t
-            
-    idx = 6 * (num_strip(t)-1) + (num_strip(t)-1)
+
+    print i,j
+
+    idx = 6 * (num_strip(i)-1) + (num_strip(j)-1)
     tech = 'Tech' + str(idx)
-    
+
     PickingCost = inst.C_alpha.value * inst.alpha_pick.value
     PickingCost += inst.C_beta.value * sum(inst.beta_pick[t].value for t in inst.TIMES)
 
@@ -516,7 +518,7 @@ def big_M_output(inst):
                         inst.X_osq[s, q] * inst.rho_sqt[s, q, t].value
                         for s in inst.STORES for q in inst.FASHION for t in inst.TIMES)
 
-    with open('summary_{}.txt'.format(idx), 'w') as f:
+    with open('BigM_{}.txt'.format(idx), 'w') as f:
         from check_sol import T
 
         f.write('Results from {}\n'.format(tech))
@@ -546,7 +548,7 @@ def big_M_output(inst):
                 print num_strip(v), '\t',
                 print num_strip(q), '\t',
                 for t in sorted(inst.TIMES):
-                    if inst.rho_vqt[v, q, t] == 1:
+                    if inst.rho_vqt[v, q, t].value == 1:
                         print t, '\t', ri(inst.X_ivq[v, q])
 
             print '\nOutbound Solution'
@@ -555,7 +557,7 @@ def big_M_output(inst):
                     print num_strip(s), '\t',
                     print num_strip(q), '\t',
                     for t in sorted(inst.TIMES):
-                        if inst.rho_sqt[s, q, t] == 1:
+                        if inst.rho_sqt[s, q, t].value == 1:
                             print t, '\t', ri(inst.X_osq[s, q])
 
             print '\nStore Inventory'
@@ -650,11 +652,11 @@ def big_M_output(inst):
 
 if __name__ == '__main__':
     instance = solve_big_m_model()
-    for t in instance.theta_put: 
+    for t in instance.theta_put:
         if instance.theta_put[t].value == 1:
             print t,
-    
-    for t in instance.theta_pick: 
+
+    for t in instance.theta_pick:
         if instance.theta_pick[t].value == 1:
             print t,
 

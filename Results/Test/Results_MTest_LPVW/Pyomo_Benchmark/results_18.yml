@@ -1,0 +1,36 @@
+Results from Tech18
+Putaway Technology: 4080
+Picking Technology: 100
+Total_Cost_Objective:
+	Value=minFunctionValue
+
+# ==========================================================
+# = Solver Results                                         =
+# ==========================================================
+# ----------------------------------------------------------
+#   Problem Information
+# ----------------------------------------------------------
+Problem: 
+- Name: 
+  Lower bound: 20492.43808
+  Upper bound: inf
+  Number of objectives: 1
+  Number of constraints: 159
+  Number of variables: 187
+  Number of binary variables: 30
+  Number of integer variables: 186
+  Number of continuous variables: 1
+  Number of nonzeros: 563
+  Sense: minimize
+# ----------------------------------------------------------
+#   Solver Information
+# ----------------------------------------------------------
+Solver: 
+- Status: aborted
+  Return code: 0
+  Message: Optimal objective for model was proven to be worse than the value specified in the Cutoff  parameter. No solution information is available.
+  User time: 0.0
+  System time: 0.0
+  Termination condition: minFunctionValue
+  Termination message: Optimal objective for model was proven to be worse than the value specified in the Cutoff  parameter. No solution information is available.
+  Error rc: 0

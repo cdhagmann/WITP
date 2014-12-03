@@ -2,7 +2,7 @@ Results from Tech1
 Putaway Technology: 1200
 Picking Technology: 200
 Total_Cost_Objective:
-	Value=27876.079
+	Value=29287.87744
 
 # ==========================================================
 # = Solver Results                                         =
@@ -12,8 +12,8 @@ Total_Cost_Objective:
 # ----------------------------------------------------------
 Problem: 
 - Name: 
-  Lower bound: 27412.7625184
-  Upper bound: 27876.079
+  Lower bound: 28806.655435
+  Upper bound: 29287.87744
   Number of objectives: 1
   Number of constraints: 159
   Number of variables: 187
@@ -45,14 +45,20 @@ Solution:
   Objective: 
     Total_Cost_Objective: 
       Id: 0
-      Value: 27876.079
+      Value: 29287.87744
   Variable: 
     alpha_put:
       Id: 0
-      Value: 3
+      Value: 2
     alpha_pick:
       Id: 1
       Value: 4
+    beta_put[1]:
+      Id: 2
+      Value: 1
+    beta_put[2]:
+      Id: 3
+      Value: 1
     beta_put[3]:
       Id: 4
       Value: 1
@@ -68,16 +74,16 @@ Solution:
     beta_pick[5]:
       Id: 11
       Value: 2
-    tau_sq[s2,q1]:
+    tau_sq[s1,q1]:
       Id: 12
       Value: 1
-    tau_sq[s2,q2]:
+    tau_sq[s1,q2]:
       Id: 13
       Value: 1
-    tau_sq[s1,q1]:
+    tau_sq[s2,q1]:
       Id: 14
       Value: 2
-    tau_sq[s1,q2]:
+    tau_sq[s2,q2]:
       Id: 15
       Value: 2
     rho_vqt[vq1,q1,1]:
@@ -86,223 +92,223 @@ Solution:
     rho_vqt[vq1,q2,3]:
       Id: 23
       Value: 1
-    rho_sqt[s2,q1,2]:
+    rho_sqt[s1,q1,2]:
       Id: 27
       Value: 1
-    rho_sqt[s2,q2,4]:
+    rho_sqt[s1,q2,4]:
       Id: 34
       Value: 1
-    rho_sqt[s1,q1,3]:
+    rho_sqt[s2,q1,3]:
       Id: 38
       Value: 1
-    rho_sqt[s1,q2,5]:
+    rho_sqt[s2,q2,5]:
       Id: 45
       Value: 1
     x_vpt[vp1,p1,2]:
       Id: 47
-      Value: 4868
+      Value: 7362
     x_vpt[vp1,p1,5]:
       Id: 50
-      Value: 4297
+      Value: 4881
     x_vpt[vp1,p2,2]:
       Id: 52
-      Value: 5641
+      Value: 4839
     x_vpt[vp1,p2,5]:
       Id: 55
-      Value: 4648
-    x_spt[s2,p2,1]:
-      Id: 56
-      Value: 866
-    x_spt[s2,p2,2]:
-      Id: 57
-      Value: 3408
-    x_spt[s2,p2,4]:
-      Id: 59
-      Value: 959
-    x_spt[s2,p1,1]:
-      Id: 61
-      Value: 1098
-    x_spt[s2,p1,2]:
-      Id: 62
-      Value: 2074
-    x_spt[s2,p1,4]:
-      Id: 64
-      Value: 806
-    x_spt[s1,p2,1]:
-      Id: 66
-      Value: 2170
-    x_spt[s1,p2,3]:
-      Id: 68
-      Value: 1274
-    x_spt[s1,p2,5]:
-      Id: 70
-      Value: 1612
+      Value: 4719
     x_spt[s1,p1,1]:
+      Id: 56
+      Value: 1360
+    x_spt[s1,p1,2]:
+      Id: 57
+      Value: 1932
+    x_spt[s1,p1,4]:
+      Id: 59
+      Value: 2622
+    x_spt[s1,p2,1]:
+      Id: 61
+      Value: 1141
+    x_spt[s1,p2,2]:
+      Id: 62
+      Value: 1324
+    x_spt[s1,p2,4]:
+      Id: 64
+      Value: 1480
+    x_spt[s2,p1,1]:
+      Id: 66
+      Value: 2596
+    x_spt[s2,p1,3]:
+      Id: 68
+      Value: 2495
+    x_spt[s2,p1,5]:
+      Id: 70
+      Value: 1238
+    x_spt[s2,p2,1]:
       Id: 71
-      Value: 2266
-    x_spt[s1,p1,3]:
+      Value: 1303
+    x_spt[s2,p2,3]:
       Id: 73
-      Value: 1988
-    x_spt[s1,p1,5]:
+      Value: 2035
+    x_spt[s2,p2,5]:
       Id: 75
-      Value: 933
-    y_pt[p2,2]:
-      Id: 77
-      Value: 2233
-    y_pt[p2,3]:
-      Id: 78
-      Value: 959
-    y_pt[p2,5]:
-      Id: 80
-      Value: 3036
+      Value: 2275
     y_pt[p1,2]:
-      Id: 82
-      Value: 2794
+      Id: 77
+      Value: 5430
     y_pt[p1,3]:
-      Id: 83
-      Value: 806
+      Id: 78
+      Value: 2935
+    y_pt[p1,4]:
+      Id: 79
+      Value: 313
     y_pt[p1,5]:
+      Id: 80
+      Value: 3956
+    y_pt[p2,2]:
+      Id: 82
+      Value: 3515
+    y_pt[p2,3]:
+      Id: 83
+      Value: 1480
+    y_pt[p2,5]:
       Id: 85
-      Value: 3364
-    y_spt[s2,p2,2]:
+      Value: 2444
+    y_spt[s1,p1,2]:
       Id: 87
-      Value: 1497
-    y_spt[s2,p2,4]:
-      Id: 89
-      Value: 388
-    y_spt[s2,p1,2]:
-      Id: 92
-      Value: 1557
-    y_spt[s2,p1,3]:
-      Id: 93
-      Value: 543
-    y_spt[s2,p1,4]:
-      Id: 94
-      Value: 75
-    y_spt[s1,p2,1]:
-      Id: 96
-      Value: 1004
-    y_spt[s1,p2,3]:
-      Id: 98
-      Value: 604
-    y_spt[s1,p2,5]:
-      Id: 100
-      Value: 23
-    y_spt[s1,p1,1]:
-      Id: 101
-      Value: 1178
-    y_spt[s1,p1,3]:
-      Id: 103
-      Value: 1523
+      Value: 1303
     y_spt[s1,p1,4]:
-      Id: 104
-      Value: 685
-    y_sqt[s2,q1,2]:
+      Id: 89
+      Value: 1221
+    y_spt[s1,p2,2]:
+      Id: 92
+      Value: 1109
+    y_spt[s1,p2,4]:
+      Id: 94
+      Value: 635
+    y_spt[s2,p1,1]:
+      Id: 96
+      Value: 882
+    y_spt[s2,p1,3]:
+      Id: 98
+      Value: 1444
+    y_spt[s2,p2,1]:
+      Id: 101
+      Value: 1511
+    y_spt[s2,p2,2]:
+      Id: 102
+      Value: 127
+    y_spt[s2,p2,3]:
+      Id: 103
+      Value: 1712
+    y_spt[s2,p2,5]:
+      Id: 105
+      Value: 714
+    y_sqt[s1,q1,2]:
       Id: 107
-      Value: 3675
-    y_sqt[s2,q1,3]:
-      Id: 108
-      Value: 3675
-    y_sqt[s2,q1,4]:
-      Id: 109
-      Value: 3675
-    y_sqt[s2,q1,5]:
-      Id: 110
-      Value: 3675
-    y_sqt[s2,q2,4]:
-      Id: 114
-      Value: 7835
-    y_sqt[s2,q2,5]:
-      Id: 115
-      Value: 7835
+      Value: 6105
     y_sqt[s1,q1,3]:
-      Id: 118
-      Value: 5640
+      Id: 108
+      Value: 6105
     y_sqt[s1,q1,4]:
-      Id: 119
-      Value: 5640
+      Id: 109
+      Value: 6105
     y_sqt[s1,q1,5]:
-      Id: 120
-      Value: 5640
+      Id: 110
+      Value: 6105
+    y_sqt[s1,q2,4]:
+      Id: 114
+      Value: 5360
     y_sqt[s1,q2,5]:
+      Id: 115
+      Value: 5360
+    y_sqt[s2,q1,3]:
+      Id: 118
+      Value: 5070
+    y_sqt[s2,q1,4]:
+      Id: 119
+      Value: 5070
+    y_sqt[s2,q1,5]:
+      Id: 120
+      Value: 5070
+    y_sqt[s2,q2,5]:
       Id: 125
-      Value: 7055
-    n_vt[vq1,1]:
-      Id: 126
-      Value: 1
-    n_vt[vq1,3]:
-      Id: 128
-      Value: 1
+      Value: 5650
     n_vt[vp1,2]:
-      Id: 132
+      Id: 127
       Value: 1
     n_vt[vp1,5]:
-      Id: 135
+      Id: 130
       Value: 1
-    n_st[s2,1]:
-      Id: 136
+    n_vt[vq1,1]:
+      Id: 131
       Value: 1
-    n_st[s2,2]:
-      Id: 137
-      Value: 1
-    n_st[s2,4]:
-      Id: 139
+    n_vt[vq1,3]:
+      Id: 133
       Value: 1
     n_st[s1,1]:
+      Id: 136
+      Value: 1
+    n_st[s1,2]:
+      Id: 137
+      Value: 1
+    n_st[s1,4]:
+      Id: 139
+      Value: 1
+    n_st[s2,1]:
       Id: 141
       Value: 1
-    n_st[s1,3]:
+    n_st[s2,3]:
       Id: 143
       Value: 1
-    n_st[s1,5]:
+    n_st[s2,5]:
       Id: 145
       Value: 1
     z_spt[s1,p1,1]:
       Id: 146
-      Value: 2266
-    z_spt[s1,p1,3]:
-      Id: 148
-      Value: 1988
-    z_spt[s1,p1,5]:
-      Id: 150
-      Value: 933
+      Value: 1360
+    z_spt[s1,p1,2]:
+      Id: 147
+      Value: 1932
+    z_spt[s1,p1,4]:
+      Id: 149
+      Value: 2622
     z_spt[s1,p2,1]:
       Id: 151
-      Value: 2170
-    z_spt[s1,p2,3]:
-      Id: 153
-      Value: 1274
-    z_spt[s1,p2,5]:
-      Id: 155
-      Value: 1612
+      Value: 1141
+    z_spt[s1,p2,2]:
+      Id: 152
+      Value: 1324
+    z_spt[s1,p2,4]:
+      Id: 154
+      Value: 1480
     z_spt[s2,p1,1]:
       Id: 156
-      Value: 1098
-    z_spt[s2,p1,2]:
-      Id: 157
-      Value: 2074
-    z_spt[s2,p1,4]:
-      Id: 159
-      Value: 806
+      Value: 2596
+    z_spt[s2,p1,3]:
+      Id: 158
+      Value: 2495
+    z_spt[s2,p1,5]:
+      Id: 160
+      Value: 1238
     z_spt[s2,p2,1]:
       Id: 161
-      Value: 866
-    z_spt[s2,p2,2]:
-      Id: 162
-      Value: 3408
-    z_spt[s2,p2,4]:
-      Id: 164
-      Value: 959
-    z_sqt[s1,q1,3]:
-      Id: 168
-      Value: 5640
-    z_sqt[s1,q2,5]:
-      Id: 175
-      Value: 7055
-    z_sqt[s2,q1,2]:
-      Id: 177
-      Value: 3675
-    z_sqt[s2,q2,4]:
-      Id: 184
-      Value: 7835
+      Value: 1303
+    z_spt[s2,p2,3]:
+      Id: 163
+      Value: 2035
+    z_spt[s2,p2,5]:
+      Id: 165
+      Value: 2275
+    z_sqt[s1,q1,2]:
+      Id: 167
+      Value: 6105
+    z_sqt[s1,q2,4]:
+      Id: 174
+      Value: 5360
+    z_sqt[s2,q1,3]:
+      Id: 178
+      Value: 5070
+    z_sqt[s2,q2,5]:
+      Id: 185
+      Value: 5650
   Constraint: No nonzero values
