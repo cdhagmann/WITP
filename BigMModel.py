@@ -24,12 +24,18 @@ class Struct():
 def num_strip(s):
     return int( ''.join( c for c in str(s) if c.isdigit() ) )
 
+
+def tech_idx(tup):
+    i, j = tup
+    return (i - 1) * 6 + (j - 1)
+
 def big_m_model():
 
     with open('PyomoCode/Pickled_Data', 'rb') as f:
         rd = pickle.load(f)
 
     model = ConcreteModel()
+
     #-----------------------------------------------------------------------------
     #                           DECLARE MODEL PARAMETERS
     #-----------------------------------------------------------------------------
@@ -51,7 +57,6 @@ def big_m_model():
     model.VT = model.VENDORS * model.TIMES
     model.VPT = model.VENDORS * model.PRODUCTS * model.TIMES
     model.SPT = model.STORES * model.PRODUCTS * model.TIMES
-
 
     model.OMEGA_Q = Set(initialize=rd.Omega_q, dimen=2)
     model.OMEGA_P = Set(initialize=rd.Omega_p, dimen=2)
@@ -105,30 +110,29 @@ def big_m_model():
     model.C_vv = Param(model.VENDORS, initialize=rd.C_vv)
     model.C_vs = Param(model.STORES, initialize=rd.C_vs)
 
-
     model.Lambda_put = Param(model.PUTAWAY, initialize=rd.lambda_put)
     model.MHE = Param(model.PUTAWAY, initialize=rd.MHE)
     model.Lambda_pick = Param(model.PICKING, initialize=rd.lambda_pick)
     model.Cth_put = Param(model.PUTAWAY, initialize=rd.C_put)
     model.Cth_pick = Param(model.PICKING, initialize=rd.C_pick)
 
-    model.BigM = Param(initialize=500)
-    model.M_MHE = Param(initialize=50000)
+    model.BigM = Param(initialize=100000)
+    model.M_MHE = Param(initialize=50000000)
 
     #-----------------------------------------------------------------------------
     #                           DECLARE MODEL VARIABLES
     #-----------------------------------------------------------------------------
 
-    model.alpha_put = Var(bounds=(0.0, 500),
-                           within=NonNegativeIntegers)
-
-    model.alpha_pick = Var(bounds=(0.0, 500),
-                           within=NonNegativeIntegers)
-
     model.theta_put = Var(model.PUTAWAY, within=Binary)
     model.theta_pick = Var(model.PICKING, within=Binary)
 
-    model.MHE_Cost = Var(model.PUTAWAY, within=NonNegativeIntegers)
+    model.MHE_Cost = Var(model.PUTAWAY, bounds=(0.0, model.M_MHE))
+
+    model.alpha_put = Var(bounds=(0.0, model.BigM),
+                           within=NonNegativeIntegers)
+
+    model.alpha_pick = Var(bounds=(0.0, model.BigM),
+                           within=NonNegativeIntegers)
 
 
     model.beta_put = Var(model.TIMES,
@@ -175,7 +179,7 @@ def big_m_model():
 
 
 
-    def objective_rule(model):
+    def Total_Cost_Objective_rule(model):
         Workers_Cost = model.C_alpha * (model.alpha_put + model.alpha_pick) + \
                        model.C_beta * sum((model.beta_put[t] + model.beta_pick[t])
                                        for t in model.TIMES)
@@ -217,7 +221,12 @@ def big_m_model():
 
         return FS_Expr
 
-    model.objective = Objective(sense=minimize)
+    model.Total_Cost_Objective = Objective(sense=minimize)
+    '''FLAG'''
+
+    #model.c1 = Constraint(expr=model.theta_put['i2'] == 1)
+    #model.c2 = Constraint(expr=model.theta_pick['j5'] == 1)
+    #model.c3 = Constraint(expr=model.alpha_pick <= 10)
 
     def constraint1_rule(model):
         return (summation(model.theta_put), 1)
@@ -234,14 +243,6 @@ def big_m_model():
         return -model.M_MHE * (1 - model.theta_put[i]) <= expr
 
     model.BigM_MHE_LOWER = Constraint(model.PUTAWAY)
-
-    def BigM_MHE_UPPER_rule(model, i):
-        expr = model.MHE_Cost[i]
-        expr -= sum(model.MHE[i] * (model.alpha_put + model.beta_put[t])
-                    for t in model.TIMES)
-        return expr <= model.M_MHE * (1 - model.theta_put[i])
-
-    model.BigM_MHE_UPPER = Constraint(model.PUTAWAY)
 
     def ConstraintFour_rule(model, i, t):
         Four_expr1 = sum(model.x_vpt[v,p,t] for v, p in model.OMEGA_P)
@@ -460,7 +461,8 @@ def solve_big_m_model(model=None):
 
 
 def big_M_output(inst):
-    obj = instance.objective()
+    obj = instance.Total_Cost_Objective()
+
     for t in inst.theta_put:
         if inst.theta_put[t].value == 1:
             i = t
@@ -470,9 +472,8 @@ def big_M_output(inst):
         if inst.theta_pick[t].value == 1:
             j = t
 
-    print i,j
+    idx = tech_idx((num_strip(i), num_strip(j)))
 
-    idx = 6 * (num_strip(i)-1) + (num_strip(j)-1)
     tech = 'Tech' + str(idx)
 
     PickingCost = inst.C_alpha.value * inst.alpha_pick.value
@@ -519,11 +520,9 @@ def big_M_output(inst):
                         for s in inst.STORES for q in inst.FASHION for t in inst.TIMES)
 
     with open('BigM_{}.txt'.format(idx), 'w') as f:
-        from check_sol import T
-
         f.write('Results from {}\n'.format(tech))
-        f.write('Putaway Technology: {}\n'.format(T[idx][0]))
-        f.write('Picking Technology: {}\n\n'.format(T[idx][1]))
+        f.write('Putaway Technology: {}\n'.format(instance.Lambda_put[i]/8.))
+        f.write('Picking Technology: {}\n\n'.format(instance.Lambda_pick[j]/8.))
         f.write('Full-Time Putaway workers: {}\n'.format(inst.alpha_put.value))
         f.write('Full-Time Picking workers: {}\n'.format(inst.alpha_pick.value))
         f.write('\nCost Breakdown:\n')
@@ -654,11 +653,15 @@ if __name__ == '__main__':
     instance = solve_big_m_model()
     for t in instance.theta_put:
         if instance.theta_put[t].value == 1:
-            print t,
+            i = t
+
 
     for t in instance.theta_pick:
         if instance.theta_pick[t].value == 1:
-            print t,
+            j = t
 
-    print instance.objective()
+    idx = tech_idx((num_strip(i), num_strip(j)))
+    tech = 'Tech' + str(idx)
+
+    print tech, instance.Total_Cost_Objective()
     big_M_output(instance)

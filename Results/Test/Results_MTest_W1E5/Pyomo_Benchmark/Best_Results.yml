@@ -1,0 +1,269 @@
+Results from Tech9
+Putaway Technology: 1200
+Picking Technology: 400
+Total_Cost_Objective:
+	Value=22631.42868
+
+# ==========================================================
+# = Solver Results                                         =
+# ==========================================================
+# ----------------------------------------------------------
+#   Problem Information
+# ----------------------------------------------------------
+Problem: 
+- Name: 
+  Lower bound: 21716.8399468
+  Upper bound: 22631.42868
+  Number of objectives: 1
+  Number of constraints: 159
+  Number of variables: 187
+  Number of binary variables: 30
+  Number of integer variables: 186
+  Number of continuous variables: 1
+  Number of nonzeros: 548
+  Sense: minimize
+# ----------------------------------------------------------
+#   Solver Information
+# ----------------------------------------------------------
+Solver: 
+- Status: ok
+  Return code: 0
+  Message: Model was solved to optimality (subject to tolerances), and an optimal solution is available.
+  User time: 0.0
+  System time: 0.0
+  Termination condition: optimal
+  Termination message: Model was solved to optimality (subject to tolerances), and an optimal solution is available.
+  Error rc: 0
+# ----------------------------------------------------------
+#   Solution Information
+# ----------------------------------------------------------
+Solution: 
+- number of solutions: 1
+  number of solutions displayed: 1
+- Gap: 0.0
+  Status: optimal
+  Objective: 
+    Total_Cost_Objective: 
+      Id: 0
+      Value: 22631.42868
+  Variable: 
+    alpha_put:
+      Id: 0
+      Value: 2
+    alpha_pick:
+      Id: 1
+      Value: 2
+    beta_put[5]:
+      Id: 6
+      Value: 1
+    beta_pick[1]:
+      Id: 7
+      Value: 1
+    beta_pick[2]:
+      Id: 8
+      Value: 1
+    beta_pick[4]:
+      Id: 10
+      Value: 1
+    beta_pick[5]:
+      Id: 11
+      Value: 1
+    tau_sq[s1,q2]:
+      Id: 12
+      Value: 2
+    tau_sq[s2,q1]:
+      Id: 13
+      Value: 1
+    tau_sq[s2,q2]:
+      Id: 14
+      Value: 1
+    rho_vqt[vq1,q1,3]:
+      Id: 17
+      Value: 1
+    rho_vqt[vq1,q2,3]:
+      Id: 22
+      Value: 1
+    rho_sqt[s1,q2,5]:
+      Id: 29
+      Value: 1
+    rho_sqt[s2,q1,4]:
+      Id: 33
+      Value: 1
+    rho_sqt[s2,q2,4]:
+      Id: 38
+      Value: 1
+    x_vpt[vp1,p1,5]:
+      Id: 44
+      Value: 8158
+    x_vpt[vp1,p2,5]:
+      Id: 49
+      Value: 12023
+    x_spt[s1,p1,2]:
+      Id: 51
+      Value: 3086
+    x_spt[s1,p1,5]:
+      Id: 54
+      Value: 1869
+    x_spt[s1,p2,2]:
+      Id: 56
+      Value: 4787
+    x_spt[s1,p2,5]:
+      Id: 59
+      Value: 1351
+    x_spt[s2,p1,1]:
+      Id: 60
+      Value: 1681.99999998
+    x_spt[s2,p1,4]:
+      Id: 63
+      Value: 1521.00000002
+    x_spt[s2,p2,1]:
+      Id: 65
+      Value: 5406.00000002
+    x_spt[s2,p2,4]:
+      Id: 68
+      Value: 478.999999981
+    y_pt[p1,1]:
+      Id: 70
+      Value: 4607.00000002
+    y_pt[p1,2]:
+      Id: 71
+      Value: 1521.00000002
+    y_pt[p1,3]:
+      Id: 72
+      Value: 1521.00000002
+    y_pt[p1,5]:
+      Id: 74
+      Value: 6289
+    y_pt[p2,1]:
+      Id: 75
+      Value: 5265.99999998
+    y_pt[p2,2]:
+      Id: 76
+      Value: 478.999999981
+    y_pt[p2,3]:
+      Id: 77
+      Value: 478.999999983
+    y_pt[p2,5]:
+      Id: 79
+      Value: 10672
+    y_spt[s1,p1,2]:
+      Id: 81
+      Value: 2329
+    y_spt[s1,p1,3]:
+      Id: 82
+      Value: 730
+    y_spt[s1,p1,5]:
+      Id: 84
+      Value: 236
+    y_spt[s1,p2,2]:
+      Id: 86
+      Value: 3941
+    y_spt[s1,p2,3]:
+      Id: 87
+      Value: 2521
+    y_spt[s1,p2,4]:
+      Id: 88
+      Value: 1126
+    y_spt[s1,p2,5]:
+      Id: 89
+      Value: 1132
+    y_spt[s2,p1,1]:
+      Id: 90
+      Value: 853
+    y_spt[s2,p1,2]:
+      Id: 91
+      Value: 211
+    y_spt[s2,p1,4]:
+      Id: 93
+      Value: 698.000000018
+    y_spt[s2,p1,5]:
+      Id: 94
+      Value: 1.77335606026e-08
+    y_spt[s2,p2,1]:
+      Id: 95
+      Value: 4220.00000005
+    y_spt[s2,p2,2]:
+      Id: 96
+      Value: 3009.00000005
+    y_spt[s2,p2,3]:
+      Id: 97
+      Value: 1968.00000005
+    y_spt[s2,p2,4]:
+      Id: 98
+      Value: 983.000000024
+    y_spt[s2,p2,5]:
+      Id: 99
+      Value: 2.08343249977e-08
+    y_sqt[s1,q2,5]:
+      Id: 109
+      Value: 6380
+    y_sqt[s2,q1,4]:
+      Id: 113
+      Value: 5475
+    y_sqt[s2,q1,5]:
+      Id: 114
+      Value: 5475
+    y_sqt[s2,q2,4]:
+      Id: 118
+      Value: 2125
+    y_sqt[s2,q2,5]:
+      Id: 119
+      Value: 2125
+    n_vt[vp1,5]:
+      Id: 124
+      Value: 1
+    n_vt[vq1,3]:
+      Id: 127
+      Value: 1
+    n_st[s1,2]:
+      Id: 131
+      Value: 1
+    n_st[s1,5]:
+      Id: 134
+      Value: 1
+    n_st[s2,1]:
+      Id: 135
+      Value: 1
+    n_st[s2,4]:
+      Id: 138
+      Value: 1
+    tau_sq[s1,q1]:
+      Id: 140
+      Value: 2
+    rho_sqt[s1,q1,5]:
+      Id: 145
+      Value: 1
+    z_spt[s1,p1,2]:
+      Id: 147
+      Value: 3086
+    z_spt[s1,p1,5]:
+      Id: 150
+      Value: 1869
+    z_spt[s1,p2,2]:
+      Id: 152
+      Value: 4787
+    z_spt[s1,p2,5]:
+      Id: 155
+      Value: 1351
+    z_spt[s2,p1,1]:
+      Id: 156
+      Value: 1681.99999999
+    z_spt[s2,p1,4]:
+      Id: 159
+      Value: 1521.00000001
+    z_spt[s2,p2,1]:
+      Id: 161
+      Value: 5406.00000002
+    z_spt[s2,p2,4]:
+      Id: 164
+      Value: 478.999999982
+    z_sqt[s1,q2,5]:
+      Id: 175
+      Value: 6380
+    z_sqt[s2,q1,4]:
+      Id: 179
+      Value: 5475
+    z_sqt[s2,q2,4]:
+      Id: 184
+      Value: 2125
+  Constraint: No nonzero values

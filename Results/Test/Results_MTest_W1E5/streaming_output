@@ -1,0 +1,113 @@
+Created WITPdataSet_v2q2s2p2t5.txt
+Compiled WITP-TPH.exe
+Pickled Data
+MTest_W1E5
+Instance 1 of 6:
+    RUN TIME [Bhanu]: 1.75 seconds
+    MIN COST [Bhanu]: $23,639.91
+
+Instance 2 of 6:
+    RUN TIME [Bhanu]: 1.94 seconds
+    MIN COST [Bhanu]: $24,142.96
+
+Instance 3 of 6:
+    RUN TIME [Bhanu]: 1.71 seconds
+    MIN COST [Bhanu]: $24,542.70
+
+Instance 4 of 6:
+    RUN TIME [Bhanu]: 3.01 seconds
+    MIN COST [Bhanu]: $23,613.79
+
+Instance 5 of 6:
+    RUN TIME [Bhanu]: 1.72 seconds
+    MIN COST [Bhanu]: $24,167.89
+
+Instance 6 of 6:
+    RUN TIME [Bhanu]: 3.20 seconds
+    MIN COST [Bhanu]: $23,735.53
+
+Optimality Gap: 2.00%
+
+Hybrid Method:
+	Finished Tech4 : $23,055.72 ($23,055.72) [50.00% Completed] (1.14 seconds)
+	Finished Tech10: $22,834.10 ($22,834.10) [100.00% Completed] (1.13 seconds)
+
+	Optimal Solution Tech10: $22,834.10 (2.27 seconds)
+
+Pyomo Benchmark:
+	Finished Tech35: $38,069.77 ($38,069.77) [2.78% Completed] (0.80 seconds)
+	Finished Tech29: $34,644.77 ($34,644.77) [5.56% Completed] (0.63 seconds)
+	Finished Tech23: $29,655.16 ($29,655.16) [8.33% Completed] (0.45 seconds)
+	Finished Tech17: $29,363.84 ($29,363.84) [11.11% Completed] (1.34 seconds)
+	Finished Tech11: $27,627.16 ($27,627.16) [13.89% Completed] (1.43 seconds)
+	Finished Tech5 : Cutoff Error ($27,627.16) [16.67% Completed] (1.24 seconds)
+	Finished Tech34: Cutoff Error ($27,627.16) [19.44% Completed] (0.18 seconds)
+	Finished Tech28: Cutoff Error ($27,627.16) [22.22% Completed] (0.28 seconds)
+	Finished Tech22: $24,862.10 ($24,862.10) [25.00% Completed] (0.47 seconds)
+	Finished Tech16: $24,568.09 ($24,568.09) [27.78% Completed] (1.07 seconds)
+	Finished Tech10: $22,834.10 ($22,834.10) [30.56% Completed] (0.82 seconds)
+	Finished Tech4 : Cutoff Error ($22,834.10) [33.33% Completed] (0.49 seconds)
+	Finished Tech33: Cutoff Error ($22,834.10) [36.11% Completed] (0.12 seconds)
+	Finished Tech27: Cutoff Error ($22,834.10) [38.89% Completed] (0.14 seconds)
+	Finished Tech21: Cutoff Error ($22,834.10) [41.67% Completed] (0.35 seconds)
+	Finished Tech15: Cutoff Error ($22,834.10) [44.44% Completed] (0.38 seconds)
+	Finished Tech9 : $22,631.43 ($22,631.43) [47.22% Completed] (1.60 seconds)
+	Finished Tech3 : Cutoff Error ($22,631.43) [50.00% Completed] (0.85 seconds)
+	Finished Tech32: Cutoff Error ($22,631.43) [52.78% Completed] (0.12 seconds)
+	Finished Tech26: Cutoff Error ($22,631.43) [55.56% Completed] (0.13 seconds)
+	Finished Tech20: Cutoff Error ($22,631.43) [58.33% Completed] (0.20 seconds)
+	Finished Tech14: Cutoff Error ($22,631.43) [61.11% Completed] (0.25 seconds)
+	Finished Tech8 : Cutoff Error ($22,631.43) [63.89% Completed] (1.08 seconds)
+	Finished Tech2 : Cutoff Error ($22,631.43) [66.67% Completed] (0.72 seconds)
+	Finished Tech31: Cutoff Error ($22,631.43) [69.44% Completed] (0.13 seconds)
+	Finished Tech25: Cutoff Error ($22,631.43) [72.22% Completed] (0.14 seconds)
+	Finished Tech19: Cutoff Error ($22,631.43) [75.00% Completed] (0.17 seconds)
+	Finished Tech13: Cutoff Error ($22,631.43) [77.78% Completed] (0.24 seconds)
+	Finished Tech7 : Cutoff Error ($22,631.43) [80.56% Completed] (0.27 seconds)
+	Finished Tech1 : Cutoff Error ($22,631.43) [83.33% Completed] (0.26 seconds)
+	Finished Tech30: Cutoff Error ($22,631.43) [86.11% Completed] (0.13 seconds)
+	Finished Tech24: Cutoff Error ($22,631.43) [88.89% Completed] (0.13 seconds)
+	Finished Tech18: Cutoff Error ($22,631.43) [91.67% Completed] (0.16 seconds)
+	Finished Tech12: Cutoff Error ($22,631.43) [94.44% Completed] (0.14 seconds)
+	Finished Tech6 : Cutoff Error ($22,631.43) [97.22% Completed] (0.13 seconds)
+	Finished Tech0 : Cutoff Error ($22,631.43) [100.00% Completed] (0.14 seconds)
+
+	Optimal Solution Tech9: $22,631.43 (17.20 seconds)
+##########
+RESULTS [Bhanu]: 
+    MEAN:  2.22 seconds
+    STDEV: 0.63 seconds
+    MIN:   1.71 seconds
+    MAX:   3.20 seconds
+
+    MEAN:  $23,973.80
+    STDEV: $338.57
+    ERROR: 1.41%
+    MIN:   $23,613.79
+    MAX:   $24,542.70
+
+
+RESULTS [Bhanu]: 
+    TIME:  13.33 seconds
+    OBJ:  $23,613.79
+
+RESULTS [Hybrid]: 
+    TIME:  15.71 seconds
+    OBJ:  $22,834.10
+
+RESULTS [Pyomo]: 
+    TIME:  17.26 seconds
+    OBJ:  $22,631.43
+
+
+COMPARISON [Bhanu vs Hybrid]: 
+    ERROR: 3.41%
+    SPEEDUP: 0.18
+
+COMPARISON [Hybrid vs Pyomo]: 
+    ERROR: 0.90%
+    SPEEDUP: 0.10
+
+
+##########
+
