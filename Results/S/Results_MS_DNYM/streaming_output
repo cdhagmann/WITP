@@ -1,0 +1,111 @@
+Created WITPdataSet_v2q10s5p10t5.txt
+Compiled WITP-TPH.exe
+Pickled Data
+MS_DXUN
+Instance 1 of 6:
+    RUN TIME [Bhanu]: 11.11 seconds
+    MIN COST [Bhanu]: $52,216.11
+
+Instance 2 of 6:
+    RUN TIME [Bhanu]: 10.63 seconds
+    MIN COST [Bhanu]: $51,160.86
+
+Instance 3 of 6:
+    RUN TIME [Bhanu]: 11.91 seconds
+    MIN COST [Bhanu]: $52,350.13
+
+Instance 4 of 6:
+    RUN TIME [Bhanu]: 8.23 seconds
+    MIN COST [Bhanu]: $51,913.69
+
+Instance 5 of 6:
+    RUN TIME [Bhanu]: 12.01 seconds
+    MIN COST [Bhanu]: $53,126.64
+
+Instance 6 of 6:
+    RUN TIME [Bhanu]: 8.38 seconds
+    MIN COST [Bhanu]: $51,629.27
+
+set([2, 3])
+[(10, 18), (16, 15), (12, 9), (17, 7), (9, 5), (11, 5), (18, 5), (0, 4), (22, 4), (23, 4), (13, 3), (20, 3), (21, 3)]
+set([4, 5, 6])
+Optimality Gap: 2.00%
+
+Warm Big M Method:
+['i2', 'i3'] ['j4', 'j5', 'j6']
+Created WITPdataSet_v2q10s5p10t5.txt
+Compiled WITP-TPH.exe
+Pickled Data
+MS_DNYM
+Instance 1 of 6:
+    RUN TIME [Bhanu]: 18.26 seconds
+    MIN COST [Bhanu]: $51,357.38
+
+Instance 2 of 6:
+    RUN TIME [Bhanu]: 7.61 seconds
+    MIN COST [Bhanu]: $50,834.21
+
+Instance 3 of 6:
+    RUN TIME [Bhanu]: 7.16 seconds
+    MIN COST [Bhanu]: $50,748.11
+
+Instance 4 of 6:
+    RUN TIME [Bhanu]: 11.96 seconds
+    MIN COST [Bhanu]: $52,306.02
+
+Instance 5 of 6:
+    RUN TIME [Bhanu]: 7.34 seconds
+    MIN COST [Bhanu]: $51,419.85
+
+Instance 6 of 6:
+    RUN TIME [Bhanu]: 15.70 seconds
+    MIN COST [Bhanu]: $49,931.39
+
+set([2, 3])
+[(10, 24), (11, 10), (6, 8), (16, 8), (9, 7), (0, 5), (22, 4), (4, 3), (21, 3), (3, 2), (7, 2), (12, 2), (18, 2)]
+set([5, 6])
+Optimality Gap: 2.00%
+
+Warm Big M Method:
+['i2', 'i3'] ['j5', 'j6']
+	Tech10 $44,957.46
+Pyomo Benchmark:
+['i1', 'i2', 'i3', 'i4', 'i5', 'i6'] ['j1', 'j2', 'j3', 'j4', 'j5', 'j6']
+	Tech10 $44,953.74 ##########
+RESULTS [Bhanu]: 
+    MEAN:  11.34 seconds
+    STDEV: 4.37 seconds
+    MIN:   7.16 seconds
+    MAX:   18.26 seconds
+
+    MEAN:  $51,099.49
+    STDEV: $728.37
+    ERROR: 1.43%
+    MIN:   $49,931.39
+    MAX:   $52,306.02
+
+
+RESULTS [Bhanu]: 
+    TIME:  68.03 seconds
+    OBJ:  $49,931.39
+
+RESULTS [Hybrid]: 
+    TIME:  4269.71 seconds
+    OBJ:  $44,957.46
+
+RESULTS [Pyomo]: 
+    TIME:  10270.72 seconds
+    OBJ:  $44,953.74
+
+
+COMPARISON [Bhanu vs Hybrid]: 
+    ERROR: 11.06%
+    SPEEDUP: 61.76
+
+COMPARISON [Hybrid vs Pyomo]: 
+    ERROR: 0.01%
+    SPEEDUP: 1.41
+
+
+##########
+

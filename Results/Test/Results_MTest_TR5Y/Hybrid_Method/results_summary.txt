@@ -1,5 +1,0 @@
-Finished Tech10: $25,377.44 ($25,377.44) [50.00% Completed] (2.30 seconds)
-Finished Tech9 : Cutoff Error ($25,377.44) [100.00% Completed] (2.99 seconds)
-
-Optimal Solution:
-	Tech10: $25,377.44 (5.29 seconds)

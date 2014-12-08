@@ -218,6 +218,9 @@ def instance_generator(S, V, P, Q, T, AD=None, DEFAULT=True, seed=None):
     rd.X_osq = {(s, q): daily_load() * T for s, q in sq}
     rd.X_ivq = {(v, q): sum([rd.X_osq[s, q] for s in rd.STORES]) * Omega[v, q] for v, q in vqq}
 
+    rd.BigM = sum(rd.Demand.itervalues()) + sum(rd.X_osq.itervalues())
+    rd.M_MHE = 87 * (500 + 500) # Max MHE * (UPPER BOUNDS OF ALPHA AND BETA)
+
     #-------------------------------------------------------------------
     #                  GENERATE TRANSPORTATION COSTS
     #-------------------------------------------------------------------
@@ -272,7 +275,7 @@ def instance_generator(S, V, P, Q, T, AD=None, DEFAULT=True, seed=None):
 
 
     #-------------------------------------------------------------------
-    #                  CREATE BHANU'S HEURISTIC FILES 
+    #                  CREATE BHANU'S HEURISTIC FILES
     #-------------------------------------------------------------------
 
     warehouses = ['w1']
@@ -345,8 +348,8 @@ def instance_generator(S, V, P, Q, T, AD=None, DEFAULT=True, seed=None):
     print "Compiled WITP-TPH.exe"
 
     #-------------------------------------------------------------------
-    #                  CREATE PYOMO FILES 
-    #-------------------------------------------------------------------       
+    #                  CREATE PYOMO FILES
+    #-------------------------------------------------------------------
 
     with open('PyomoCode/Pickled_Data', 'wb') as f:
         pickle.dump(rd, f, protocol=-1)
@@ -374,5 +377,4 @@ def main():
 
 
 if __name__ == '__main__':
-    rd = main()	  
-  
+    rd = main()

@@ -1,5 +1,6 @@
 from Function_Module import *
 from Pyomo_code import *
+from BigMModel import solve_big_m_model
 import time
 
 global_gap = .02
@@ -7,6 +8,8 @@ global_gap = .02
 def tech_idx(tup):
     i, j = tup
     return (i - 1) * 6 + (j - 1)
+
+BIG_M_TIMEOUT = 12 * 60 * 60
 
 @Timer
 def Bhanu_code():
@@ -21,6 +24,7 @@ def Bhanu_code():
 
 @Timer
 def Hybrid_code(cpath, N, GG=None):
+    T1 = time.time()
     BS, BT = [], []
     count, k, gap = {}, 1, 0
     best = set()
@@ -93,12 +97,14 @@ def Hybrid_code(cpath, N, GG=None):
     qprint('Optimality Gap: {:.2%}'.format(global_gap))
     print
 
-    qprint("Hybrid Method:")
+    qprint("Warm Big M Method:")
 
-    Instance_path = path(cpath,'Hybrid_Method')
+    Instance_path = path(cpath,'WBM_Method')
     mkpath(Instance_path)
 
-    HS, _ = Pyomo_code(indices=indices, cutoff=True, gap=global_gap)
+    HS, HT = solve_big_m_model(PUTAWAY=list(bi), PICKING=list(bj),
+                               time=BIG_M_TIMEOUT - (time.time() - T1),
+                               gap=global_gap, cutoff=min(BS))
 
     mv('results_best.yml', '{}/Best_Results.yml'.format(Instance_path))
     mv('results_*',                        '{}/'.format(Instance_path))
@@ -107,13 +113,13 @@ def Hybrid_code(cpath, N, GG=None):
     return BS, BT, HS
 
 @Timer
-def Pyomo_wrapper(cpath):
+def BM_wrapper(cpath):
     qprint("Pyomo Benchmark:")
 
-    Instance_path = path(cpath,'Pyomo_Benchmark')
+    Instance_path = path(cpath,'BigM_Benchmark')
     mkpath(Instance_path)
 
-    PS, PT = Pyomo_code(cutoff=True, gap=global_gap)
+    PS, PT = solve_big_m_model(gap=global_gap, time=BIG_M_TIMEOUT)
 
     mv('results_best.yml', '{}/Best_Results.yml'.format(Instance_path))
     mv('results_*',              '{}/'.format(Instance_path))
@@ -121,7 +127,6 @@ def Pyomo_wrapper(cpath):
     cp('PyomoCode/Pickled_Data', '{}/'.format(Instance_path))
 
     return PS
-
 if '__main__' == __name__:
     ID = 'C' + id_generator(size=5)
     foldername = 'Results_' + ID
@@ -129,5 +134,6 @@ if '__main__' == __name__:
     cpath = path(foldername,'Case_1')
     print ID
     (BS, BT, HS), HT = Hybrid_code(cpath, N=6)
-    print
-    #PS, PT = Pyomo_wrapper(cpath)
+    print ptime(HT)
+    PS, PT = BM_wrapper(cpath)
+    print ptime(PT)

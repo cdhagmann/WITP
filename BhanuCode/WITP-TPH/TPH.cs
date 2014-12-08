@@ -23,8 +23,8 @@ namespace WITP_TPH
         List<List<float>> _numShipmentsWtoS;            //[time period] [store] as currently we deal with only one warehouse
         //List<float> _pickerBlocking;
 
-        string fileName = "v2q2s2p2t5";
-        StreamReader sr = new StreamReader("WITPdataSet_v2q2s2p2t5.txt");
+        string fileName = "v2q10s5p10t5";
+        StreamReader sr = new StreamReader("WITPdataSet_v2q10s5p10t5.txt");
 
         TextWriter twSol;               //= new StreamWriter("OptPolicyResults\\Solution.txt");  
         bool AllParamComb = false;      //flag to print the output files
