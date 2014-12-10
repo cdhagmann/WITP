@@ -103,30 +103,28 @@ def Hybrid_code(cpath, N, GG=None):
     mkpath(Instance_path)
 
     HS, HT = solve_big_m_model(PUTAWAY=list(bi), PICKING=list(bj),
-                               time=BIG_M_TIMEOUT - (time.time() - T1),
-                               gap=global_gap, cutoff=min(BS))
+                               time_limit=BIG_M_TIMEOUT - (time.time() - T1),
+                               gap=global_gap)
 
-    mv('results_best.yml', '{}/Best_Results.yml'.format(Instance_path))
-    mv('results_*',                        '{}/'.format(Instance_path))
-    mv('summary_*',                        '{}/'.format(Instance_path))
-
+    cp('bigm_output.txt', '{}/'.format(Instance_path))
+    cp('PyomoCode/Pickled_Data', '{}/'.format(Instance_path))
     return BS, BT, HS
 
 @Timer
 def BM_wrapper(cpath):
-    qprint("Pyomo Benchmark:")
+    qprint("Big M Benchmark:")
 
     Instance_path = path(cpath,'BigM_Benchmark')
     mkpath(Instance_path)
 
-    PS, PT = solve_big_m_model(gap=global_gap, time=BIG_M_TIMEOUT)
+    PS, PT = solve_big_m_model(gap=global_gap, time_limit=BIG_M_TIMEOUT)
 
-    mv('results_best.yml', '{}/Best_Results.yml'.format(Instance_path))
-    mv('results_*',              '{}/'.format(Instance_path))
-    mv('summary_*',              '{}/'.format(Instance_path))
+    cp('bigm_output.txt', '{}/'.format(Instance_path))
     cp('PyomoCode/Pickled_Data', '{}/'.format(Instance_path))
 
     return PS
+
+
 if '__main__' == __name__:
     ID = 'C' + id_generator(size=5)
     foldername = 'Results_' + ID

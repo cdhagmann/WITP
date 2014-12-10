@@ -3,7 +3,7 @@
 #-----------------------------------------------------------------------------
 
 from coopr.pyomo import *
-import pickle
+import pickle, time
 from coopr import neos
 from coopr.opt import SolverFactory
 import coopr.environ
@@ -454,10 +454,10 @@ def big_m_model(PUTAWAY=None, PICKING=None):
 
     return model
 
-@Timer
-def solve_big_m_model(solver='gurobi', time=None, gap=None, output=False,
+def solve_big_m_model(solver='gurobi', time_limit=None, gap=None, output=True,
                       PUTAWAY=None, PICKING=None, cutoff=None):
 
+    T1 = time.time()
     model = big_m_model(PUTAWAY, PICKING)
 
     instance = model.create()
@@ -470,8 +470,8 @@ def solve_big_m_model(solver='gurobi', time=None, gap=None, output=False,
         else:
             opt.options["MIPGapAbs"] = gap
 
-    if time is not None:
-        opt.options["TimeLimit"] = time
+    if time_limit is not None:
+        opt.options["TimeLimit"] = time_limit
 
     if cutoff is not None:
         opt.options["Cutoff"] = cutoff
@@ -483,7 +483,7 @@ def solve_big_m_model(solver='gurobi', time=None, gap=None, output=False,
     status = results['Solver'][0]['Termination condition'].key
 
     transformed_results = instance.update_results(results)
-
+    BMT = time.time() - T1
     if status == 'optimal':
         instance.load(results)
         obj = instance.Total_Cost_Objective()
@@ -496,10 +496,13 @@ def solve_big_m_model(solver='gurobi', time=None, gap=None, output=False,
             if instance.theta_pick[t].value == 1:
                 j = t
 
+        line = bash_command('tail -1 temp.log')[0]
+        err = float(line.split()[-1].strip('%'))
+
         idx = tech_idx((num_strip(i), num_strip(j)))
         tech = 'Tech' + str(idx)
-
-        print '\t', tech, curr(instance.Total_Cost_Objective()),
+        info = (tech, curr(obj), err/100., ptime(BMT))
+        print "\tSelected {0:6}: {1} [{2:.2%}] ({3})".format(*info)
         if output:
             big_M_output(instance)
         rm('temp.log')
@@ -522,7 +525,7 @@ def solve_big_m_model(solver='gurobi', time=None, gap=None, output=False,
             with Redirect(f, f):
                 transformed_results.write()
 
-    return obj
+    return obj, BMT
 
 
 def big_M_output(inst):
@@ -719,5 +722,5 @@ if __name__ == '__main__':
     #instance, T = solve_big_m_model(PUTAWAY=(2,), PICKING=(4,5), gap=.02)
     #print ptime(T)
 
-    instance, T = solve_big_m_model(gap=.02, time=10)
+    instance, T = solve_big_m_model(gap=.02, time_limit=10)
     print ptime(T)
