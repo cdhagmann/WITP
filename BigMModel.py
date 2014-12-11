@@ -3,7 +3,7 @@
 #-----------------------------------------------------------------------------
 
 from coopr.pyomo import *
-import pickle, time
+import pickle
 from coopr import neos
 from coopr.opt import SolverFactory
 import coopr.environ
@@ -29,29 +29,12 @@ def tech_idx(tup):
     i, j = tup
     return (i - 1) * 6 + (j - 1)
 
+def big_m_model():
 
-def big_m_model(PUTAWAY=None, PICKING=None):
     with open('PyomoCode/Pickled_Data', 'rb') as f:
         rd = pickle.load(f)
 
-    if PUTAWAY is not None:
-        if isinstance(PUTAWAY, (list, tuple)):
-            indices = map(str, PUTAWAY)
-            rd.PUTAWAY = list("i" + str(i) for i in indices)
-            rd.lambda_put = {i:rd.lambda_put[i] for i in rd.PUTAWAY}
-            rd.MHE = {i:rd.MHE[i] for i in rd.PUTAWAY}
-            rd.C_put = {i:rd.C_put[i] for i in rd.PUTAWAY}
-
-    if PICKING is not None:
-        if isinstance(PICKING, (list, tuple)):
-            indices = map(str, PICKING)
-            rd.PICKING = list("j" + str(j) for j in indices)
-            rd.lambda_pick = {j:rd.lambda_pick[j] for j in rd.PICKING}
-            rd.C_pick = {j:rd.C_pick[j] for j in rd.PICKING}
-
-    print rd.PUTAWAY, rd.PICKING
     model = ConcreteModel()
-
     #-----------------------------------------------------------------------------
     #                           DECLARE MODEL PARAMETERS
     #-----------------------------------------------------------------------------
@@ -63,10 +46,8 @@ def big_m_model(PUTAWAY=None, PICKING=None):
     model.VENDORS_P = Set(initialize=rd.VENDORS_P)
     model.VENDORS = Set(initialize=rd.VENDORS)
     model.TIMES = Set(initialize=rd.TIMES)
-
-    model.PUTAWAY = Set(initialize=rd.PUTAWAY)
     model.PICKING = Set(initialize=rd.PICKING)
-
+    model.PUTAWAY = Set(initialize=rd.PUTAWAY)
 
     model.SP = model.STORES * model.PRODUCTS
     model.VP = model.VENDORS * model.PRODUCTS
@@ -75,6 +56,7 @@ def big_m_model(PUTAWAY=None, PICKING=None):
     model.VT = model.VENDORS * model.TIMES
     model.VPT = model.VENDORS * model.PRODUCTS * model.TIMES
     model.SPT = model.STORES * model.PRODUCTS * model.TIMES
+
 
     model.OMEGA_Q = Set(initialize=rd.Omega_q, dimen=2)
     model.OMEGA_P = Set(initialize=rd.Omega_p, dimen=2)
@@ -128,29 +110,30 @@ def big_m_model(PUTAWAY=None, PICKING=None):
     model.C_vv = Param(model.VENDORS, initialize=rd.C_vv)
     model.C_vs = Param(model.STORES, initialize=rd.C_vs)
 
+
     model.Lambda_put = Param(model.PUTAWAY, initialize=rd.lambda_put)
     model.MHE = Param(model.PUTAWAY, initialize=rd.MHE)
     model.Lambda_pick = Param(model.PICKING, initialize=rd.lambda_pick)
     model.Cth_put = Param(model.PUTAWAY, initialize=rd.C_put)
     model.Cth_pick = Param(model.PICKING, initialize=rd.C_pick)
 
-    model.BigM = Param(initialize=rd.BigM)
-    model.M_MHE = Param(initialize=rd.M_MHE)
+    model.BigM = Param(initialize=500)
+    model.M_MHE = Param(initialize=50000)
 
     #-----------------------------------------------------------------------------
     #                           DECLARE MODEL VARIABLES
     #-----------------------------------------------------------------------------
 
+    model.alpha_put = Var(bounds=(0.0, model.BigM),
+                           within=NonNegativeIntegers)
+
+    model.alpha_pick = Var(bounds=(0.0, model.BigM),
+                           within=NonNegativeIntegers)
+
     model.theta_put = Var(model.PUTAWAY, within=Binary)
     model.theta_pick = Var(model.PICKING, within=Binary)
 
-    model.MHE_Cost = Var(model.PUTAWAY, bounds=(0.0, model.M_MHE))
-
-    model.alpha_put = Var(bounds=(0.0, 500),
-                           within=NonNegativeIntegers)
-
-    model.alpha_pick = Var(bounds=(0.0, 500),
-                           within=NonNegativeIntegers)
+    model.MHE_Cost = Var(model.PUTAWAY, within=NonNegativeIntegers)
 
 
     model.beta_put = Var(model.TIMES,
@@ -197,7 +180,7 @@ def big_m_model(PUTAWAY=None, PICKING=None):
 
 
 
-    def Total_Cost_Objective_rule(model):
+    def objective_rule(model):
         Workers_Cost = model.C_alpha * (model.alpha_put + model.alpha_pick) + \
                        model.C_beta * sum((model.beta_put[t] + model.beta_pick[t])
                                        for t in model.TIMES)
@@ -239,16 +222,36 @@ def big_m_model(PUTAWAY=None, PICKING=None):
 
         return FS_Expr
 
-    model.Total_Cost_Objective = Objective(sense=minimize)
+    model.objective = Objective(sense=minimize)
+    '''FLAG'''
 
+    model.c1 = Constraint(expr=model.theta_put['i2'] == 1)
+    model.c2 = Constraint(expr=model.theta_pick['j5'] == 1)
+    model.c3 = Constraint(expr=model.alpha_pick <= 10)
 
+    def constraint1_rule(model):
+        return (summation(model.theta_put), 1)
 
+    model.constraint1 = Constraint()
+    def constraint2_rule(model):
+        return (summation(model.theta_pick), 1)
+
+    model.constraint2 = Constraint()
     def BigM_MHE_LOWER_rule(model, i):
-        expr = model.MHE_Cost[i] - model.MHE[i] * \
-               sum(model.alpha_put + model.beta_put[t] for t in model.TIMES)
+        expr = model.MHE_Cost[i]
+        expr -= sum(model.MHE[i] * (model.alpha_put + model.beta_put[t])
+                    for t in model.TIMES)
         return -model.M_MHE * (1 - model.theta_put[i]) <= expr
 
     model.BigM_MHE_LOWER = Constraint(model.PUTAWAY)
+
+    def BigM_MHE_UPPER_rule(model, i):
+        expr = model.MHE_Cost[i]
+        expr -= sum(model.MHE[i] * (model.alpha_put + model.beta_put[t])
+                    for t in model.TIMES)
+        return expr <= model.M_MHE * (1 - model.theta_put[i])
+
+    model.BigM_MHE_UPPER = Constraint(model.PUTAWAY)
 
     def ConstraintFour_rule(model, i, t):
         Four_expr1 = sum(model.x_vpt[v,p,t] for v, p in model.OMEGA_P)
@@ -267,8 +270,7 @@ def big_m_model(PUTAWAY=None, PICKING=None):
 
     model.ConstraintFive = Constraint(model.PICKING, model.TIMES)
 
-    model.constraint1 = Constraint(expr=summation(model.theta_put) == 1)
-    model.constraint2 = Constraint(expr=summation(model.theta_pick) == 1)
+
 
     # Constraint Six
     def ConstraintSixPutaway_rule(model, t):
@@ -454,82 +456,21 @@ def big_m_model(PUTAWAY=None, PICKING=None):
 
     return model
 
-def solve_big_m_model(solver='gurobi', time_limit=None, gap=None, output=True,
-                      PUTAWAY=None, PICKING=None, cutoff=None):
+def solve_big_m_model(model=None):
+    if model is None:
+        model = big_m_model()
 
-    T1 = time.time()
-    model = big_m_model(PUTAWAY, PICKING)
 
     instance = model.create()
-    # instance.write('model_{}.lp'.format(idx),symbolic_solver_labels=True)
+    opt = SolverFactory('gurobi')
+    results = opt.solve(model)
 
-    opt = SolverFactory(solver)
-    if gap is not None:
-        if gap < 1:
-            opt.options["MIPGap"] = gap
-        else:
-            opt.options["MIPGapAbs"] = gap
-
-    if time_limit is not None:
-        opt.options["TimeLimit"] = time_limit
-
-    if cutoff is not None:
-        opt.options["Cutoff"] = cutoff
-
-    with open('temp.log', 'w') as f:
-        with Redirect(f, f):
-            results = opt.solve(model, tee=True)
-
-    status = results['Solver'][0]['Termination condition'].key
-
-    transformed_results = instance.update_results(results)
-    BMT = time.time() - T1
-    if status == 'optimal':
-        instance.load(results)
-        obj = instance.Total_Cost_Objective()
-        for t in instance.theta_put:
-            if instance.theta_put[t].value == 1:
-                i = t
-
-
-        for t in instance.theta_pick:
-            if instance.theta_pick[t].value == 1:
-                j = t
-
-        line = bash_command('tail -1 temp.log')[0]
-        err = float(line.split()[-1].strip('%'))
-
-        idx = tech_idx((num_strip(i), num_strip(j)))
-        tech = 'Tech' + str(idx)
-        info = (tech, curr(obj), err/100., ptime(BMT))
-        print "\tSelected {0:6}: {1} [{2:.2%}] ({3})".format(*info)
-        if output:
-            big_M_output(instance)
-        rm('temp.log')
-    else:
-        with open('bigm_output.txt', 'wb') as f:
-            if status == 'infeasible':
-                obj = 'Infeasible'
-                print obj
-            elif status == 'minFunctionValue':
-                obj =  'Cutoff Error'
-                print obj
-            elif status == 'maxTimeLimit':
-                line = bash_command('tail -1 temp.log')[0]
-                obj = float(line.split()[2].strip(','))
-                err = float(line.split()[-1].strip('%'))
-                print '{} [{}%]'.format(curr(obj), err)
-            else:
-                print 'Unknown Status: ' + status
-
-            with Redirect(f, f):
-                transformed_results.write()
-
-    return obj, BMT
+    instance.load(results)
+    return instance
 
 
 def big_M_output(inst):
-    obj = inst.Total_Cost_Objective()
+    obj = instance.objective()
 
     for t in inst.theta_put:
         if inst.theta_put[t].value == 1:
@@ -587,10 +528,10 @@ def big_M_output(inst):
                         inst.X_osq[s, q] * inst.rho_sqt[s, q, t].value
                         for s in inst.STORES for q in inst.FASHION for t in inst.TIMES)
 
-    with open('bigm_output.txt', 'wb') as f:
+    with open('BigM_{}.txt'.format(idx), 'w') as f:
         f.write('Results from {}\n'.format(tech))
-        f.write('Putaway Technology: {}\n'.format(inst.Lambda_put[i]/8.))
-        f.write('Picking Technology: {}\n\n'.format(inst.Lambda_pick[j]/8.))
+        f.write('Putaway Technology: {}\n'.format(instance.Lambda_put[i]/8.))
+        f.write('Picking Technology: {}\n\n'.format(instance.Lambda_pick[j]/8.))
         f.write('Full-Time Putaway workers: {}\n'.format(inst.alpha_put.value))
         f.write('Full-Time Picking workers: {}\n'.format(inst.alpha_pick.value))
         f.write('\nCost Breakdown:\n')
@@ -718,9 +659,18 @@ def big_M_output(inst):
 
 
 if __name__ == '__main__':
+    instance = solve_big_m_model()
+    for t in instance.theta_put:
+        if instance.theta_put[t].value == 1:
+            i = t
 
-    #instance, T = solve_big_m_model(PUTAWAY=(2,), PICKING=(4,5), gap=.02)
-    #print ptime(T)
 
-    instance, T = solve_big_m_model(gap=.02, time_limit=10)
-    print ptime(T)
+    for t in instance.theta_pick:
+        if instance.theta_pick[t].value == 1:
+            j = t
+
+    idx = tech_idx((num_strip(i), num_strip(j)))
+    tech = 'Tech' + str(idx) 
+
+    print tech, instance.objective()
+    big_M_output(instance)
